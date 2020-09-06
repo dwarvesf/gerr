@@ -83,3 +83,10 @@ func E(args ...interface{}) Error {
 	}
 	return e
 }
+
+// Et builds an error value from its arguments.
+func Et(target string, args ...interface{}) Error {
+	t := Target(target)
+	args = append(args, t)
+	return E(args...)
+}

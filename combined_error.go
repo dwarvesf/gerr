@@ -25,7 +25,7 @@ type CombinedItem struct {
 
 // ToError make error from combined key error
 func (e CombinedError) ToError() *Error {
-	return MakeErrorFromCombinedError(e)
+	return makeErrorFromCombinedError(e)
 }
 
 // CombinedE helper func for init combined key error
@@ -86,8 +86,8 @@ func CombinedE(args ...interface{}) CombinedError {
 	return e
 }
 
-// MakeErrorFromCombinedError make error form combined key error
-func MakeErrorFromCombinedError(err CombinedError) *Error {
+// makeErrorFromCombinedError make error form combined key error
+func makeErrorFromCombinedError(err CombinedError) *Error {
 	rs := &Error{
 		Code:    err.Code,
 		Message: err.Message,
