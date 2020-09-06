@@ -1,5 +1,6 @@
 Package golang error
 =======================
+[![Made in Vietnam](https://raw.githubusercontent.com/webuild-community/badge/master/svg/made.svg)](https://webuild.community)
 ![Project status](https://img.shields.io/badge/version-0.0.1-green.svg)
 ![License](https://img.shields.io/dub/l/vibe-d.svg)
 

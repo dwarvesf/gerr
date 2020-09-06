@@ -64,6 +64,28 @@ func TestE(t *testing.T) {
 			},
 		},
 		{
+			name: "init with error list",
+			args: args{
+				params: []interface{}{[]Error{{Message: "another error"}}},
+			},
+			want: Error{
+				Errors: []*Error{
+					{Message: "another error"},
+				},
+			},
+		},
+		{
+			name: "init with error pointer list",
+			args: args{
+				params: []interface{}{[]*Error{{Message: "another error"}}},
+			},
+			want: Error{
+				Errors: []*Error{
+					{Message: "another error"},
+				},
+			},
+		},
+		{
 			name: "init with unknown field",
 			args: args{
 				params: []interface{}{float64(3)},
@@ -88,6 +110,71 @@ func TestE(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := E(tt.args.params...); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("E() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestEt(t *testing.T) {
+	type args struct {
+		target string
+		args   []interface{}
+	}
+	tests := []struct {
+		name string
+		args args
+		want Error
+	}{
+		{
+			name: "target is not empty",
+			args: args{
+				target: "new-target",
+				args:   nil,
+			},
+			want: Error{
+				Target: "new-target",
+			},
+		},
+		{
+			name: "target is empty",
+			args: args{
+				target: "",
+				args:   nil,
+			},
+			want: Error{
+				Target: "",
+			},
+		},
+		{
+			name: "target with another target",
+			args: args{
+				target: "target",
+				args: []interface{}{
+					Target("new-target"),
+				},
+			},
+			want: Error{
+				Target: "target",
+			},
+		},
+		{
+			name: "target with message",
+			args: args{
+				target: "target",
+				args: []interface{}{
+					"message",
+				},
+			},
+			want: Error{
+				Target:  "target",
+				Message: "message",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Et(tt.args.target, tt.args.args...); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Et() = %v, want %v", got, tt.want)
 			}
 		})
 	}
