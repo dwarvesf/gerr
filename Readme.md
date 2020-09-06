@@ -132,6 +132,10 @@ In `gerr` we use some packages
   - [x] json format: `{"instance": "production", "message": "i’m a syslog!"}`
   - [x] loki format: `{instance="production"} 00:00:00 i’m a syslog!`
 
+## Examples
+
+[gin api example](https://github.com/hieuphq/go-backend-example): simple api with gin. We custom some validation rules and support to translate errors to Vietnamese.
+
 ## How to Contribute
 
 Make a pull request...
