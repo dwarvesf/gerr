@@ -1,5 +1,5 @@
-Package golang error
-=======================
+# Package golang error
+
 [![Made in Vietnam](https://raw.githubusercontent.com/webuild-community/badge/master/svg/made.svg)](https://webuild.community)
 ![Project status](https://img.shields.io/badge/version-0.0.1-green.svg)
 ![License](https://img.shields.io/dub/l/vibe-d.svg)
@@ -21,7 +21,9 @@ import "github.com/dwarvesf/gerr"
 ```
 
 ## Usages
+
 Getting started
+
 - Init an error
 - Make HTTP response from error
 - Prepare for validation error from [validator](https://github.com/go-playground/validator)
@@ -32,7 +34,7 @@ Init with struct
 
 ```go
 err := gerr.Error{
-  TracingID : "abc123",
+  TraceID : "abc123",
   Code      : 400,
   Message   : "bad request",
   Errors    : []*gerr.Error{
@@ -54,7 +56,7 @@ Init with utility function. `gerr` receive almost data types to make error insta
 err := gerr.E(
   "bad request",
   400,
-  gerr.TracingID("abc123"),
+  gerr.TraceID("abc123"),
   gerr.Error{
     Target  : "username",
     Message : "username is required field",
@@ -81,15 +83,17 @@ We receive the error with the nested object in detail
 ### Prepare for validation error from [validator](https://github.com/go-playground/validator)
 
 In `go`, we usually use `validator` package to validate data. We can:
+
 - Validate our variable and receive error structure with our customize
 - Localization supported: 12 languages code (Aug 30th, 2020)
 
 The structure we usually receive from `validator` [FieldError](https://github.com/go-playground/validator/blob/master/errors.go#L83) can be:
+
 ```go
 type FieldError interface {
   // ...
   // eg. JSON name "User.fname"
-	Namespace() string 
+	Namespace() string
 
   // eq. "User.FirstName" see Namespace for comparison
   StructNamespace() string
@@ -101,6 +105,7 @@ type FieldError interface {
   StructField() string
 }
 ```
+
 In `gerr`, we use `Namespace()` to get key with nested object's key is combine into a string.
 We make a structure `CombinedError` for this case. Make a utility function to convert to `gerr.Error`
 The idea for other cases is to try to convert other error types to `gerr.Error`. That's all.
@@ -118,7 +123,9 @@ err = newErr.ToError()
 ```
 
 ## External packages
+
 In `gerr` we use some packages
+
 - [logus](https://github.com/sirupsen/logrus): log library for golang
 
 ## Supported features
