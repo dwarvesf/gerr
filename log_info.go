@@ -9,8 +9,8 @@ const (
 	// LogKeyEnvironment log key Environment
 	LogKeyEnvironment = "env"
 
-	// LogKeyTracingID log key TracingId
-	LogKeyTracingID = "tracingId"
+	// LogKeyTraceID log key TraceId
+	LogKeyTraceID = "traceId"
 
 	// LogKeyPath log key Path
 	LogKeyPath = "path"
@@ -36,7 +36,7 @@ type Environment string
 
 // RequestInfo request information
 type RequestInfo struct {
-	TracingID string
+	TraceID   string
 	Path      string
 	Method    string
 	IP        string
@@ -61,7 +61,7 @@ func (l LogInfo) Update(args ...interface{}) {
 		case Environment:
 			l[LogKeyEnvironment] = string(arg)
 		case RequestInfo:
-			l[LogKeyTracingID] = arg.TracingID
+			l[LogKeyTraceID] = arg.TraceID
 			l[LogKeyPath] = arg.Path
 			l[LogKeyMethod] = arg.Method
 			l[LogKeyUserAgent] = arg.UserAgent

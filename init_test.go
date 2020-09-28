@@ -17,36 +17,57 @@ func TestE(t *testing.T) {
 		{
 			name: "init with target",
 			args: args{
-				params: []interface{}{Target("target-1")},
+				params: []interface{}{
+					Target("target-1"),
+					Op("TestE.func1"),
+				},
 			},
 			want: Error{
 				Target: "target-1",
+				Op:     "TestE.func1",
 			},
 		},
 		{
 			name: "init with message",
 			args: args{
-				params: []interface{}{Message("err message")},
+				params: []interface{}{
+					Message("err message"),
+					Op("TestE.func1"),
+				},
 			},
 			want: Error{
 				Message: "err message",
+				Op:      "TestE.func1",
 			},
 		},
 		{
 			name: "init with code",
 			args: args{
-				params: []interface{}{Code(400)},
+				params: []interface{}{
+					Op("TestE.func1"),
+					Code(400),
+				},
 			},
 			want: Error{
-				Code: 400,
+				Code:    400,
+				Message: "Bad Request",
+				Op:      "TestE.func1",
 			},
 		},
 		{
 			name: "init with error",
 			args: args{
-				params: []interface{}{Error{Message: "another error"}},
+				params: []interface{}{
+					"error",
+					400,
+					Error{Message: "another error"},
+					Op("TestE.func1"),
+				},
 			},
 			want: Error{
+				Message: "error",
+				Code:    400,
+				Op:      "TestE.func1",
 				Errors: []*Error{
 					{Message: "another error"},
 				},
@@ -55,9 +76,17 @@ func TestE(t *testing.T) {
 		{
 			name: "init with error pointer",
 			args: args{
-				params: []interface{}{&Error{Message: "another error"}},
+				params: []interface{}{
+					"error",
+					400,
+					&Error{Message: "another error"},
+					Op("TestE.func1"),
+				},
 			},
 			want: Error{
+				Message: "error",
+				Code:    400,
+				Op:      "TestE.func1",
 				Errors: []*Error{
 					{Message: "another error"},
 				},
@@ -66,9 +95,10 @@ func TestE(t *testing.T) {
 		{
 			name: "init with error list",
 			args: args{
-				params: []interface{}{[]Error{{Message: "another error"}}},
+				params: []interface{}{Op("TestE.func1"), []Error{{Message: "another error"}}},
 			},
 			want: Error{
+				Op: "TestE.func1",
 				Errors: []*Error{
 					{Message: "another error"},
 				},
@@ -77,9 +107,10 @@ func TestE(t *testing.T) {
 		{
 			name: "init with error pointer list",
 			args: args{
-				params: []interface{}{[]*Error{{Message: "another error"}}},
+				params: []interface{}{Op("TestE.func1"), []*Error{{Message: "another error"}}},
 			},
 			want: Error{
+				Op: "TestE.func1",
 				Errors: []*Error{
 					{Message: "another error"},
 				},
@@ -88,9 +119,10 @@ func TestE(t *testing.T) {
 		{
 			name: "init with unknown field",
 			args: args{
-				params: []interface{}{float64(3)},
+				params: []interface{}{Op("TestE.func1"), float64(3)},
 			},
 			want: Error{
+				Op: "TestE.func1",
 				Errors: []*Error{
 					{Message: "unknown type float64, value 3 in error call"},
 				},
@@ -99,9 +131,10 @@ func TestE(t *testing.T) {
 		{
 			name: "init with name, code",
 			args: args{
-				params: []interface{}{"str", 400},
+				params: []interface{}{Op("TestE.func1"), "str", 400},
 			},
 			want: Error{
+				Op:      "TestE.func1",
 				Message: "str", Code: 400,
 			},
 		},
@@ -129,9 +162,12 @@ func TestEt(t *testing.T) {
 			name: "target is not empty",
 			args: args{
 				target: "new-target",
-				args:   nil,
+				args: []interface{}{
+					Op("TestEt.func1"),
+				},
 			},
 			want: Error{
+				Op:     "TestEt.func1",
 				Target: "new-target",
 			},
 		},
@@ -139,9 +175,12 @@ func TestEt(t *testing.T) {
 			name: "target is empty",
 			args: args{
 				target: "",
-				args:   nil,
+				args: []interface{}{
+					Op("TestEt.func1"),
+				},
 			},
 			want: Error{
+				Op:     "TestEt.func1",
 				Target: "",
 			},
 		},
@@ -150,10 +189,12 @@ func TestEt(t *testing.T) {
 			args: args{
 				target: "target",
 				args: []interface{}{
+					Op("TestEt.func1"),
 					Target("new-target"),
 				},
 			},
 			want: Error{
+				Op:     "TestEt.func1",
 				Target: "target",
 			},
 		},
@@ -162,10 +203,12 @@ func TestEt(t *testing.T) {
 			args: args{
 				target: "target",
 				args: []interface{}{
+					Op("TestEt.func1"),
 					"message",
 				},
 			},
 			want: Error{
+				Op:      "TestEt.func1",
 				Target:  "target",
 				Message: "message",
 			},
