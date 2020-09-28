@@ -21,7 +21,6 @@ func (e ErrorBuilder) Err() Error {
 	return E(
 		e.Code,
 		e.Message,
-		TraceID(e.TraceID),
 		Target(e.Target),
 		Op(e.Op),
 		e.Errors,

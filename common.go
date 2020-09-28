@@ -21,3 +21,23 @@ func getDefaultMessage(code int) string {
 
 	return ""
 }
+
+func getStatusCode(code int) int {
+	if code <= httpMaxLength {
+		return code
+	}
+
+	if code < internalCodeMax {
+		return http.StatusInternalServerError
+	}
+
+	if code < serviceCodeMax {
+		return http.StatusInternalServerError
+	}
+
+	if code < businessCodeMax {
+		return http.StatusBadRequest
+	}
+
+	return http.StatusBadRequest
+}

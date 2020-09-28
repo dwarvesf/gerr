@@ -84,8 +84,11 @@ func detachFields(vals ...interface{}) (logrus.Fields, logrus.Level, []interface
 			fields = newFieldsWithLogInfo(arg)
 		case Error:
 			lvl = getLogLevel(arg.Code)
+			others = append(others, arg.Error())
+
 		case *Error:
 			lvl = getLogLevel(arg.Code)
+			others = append(others, arg.Error())
 
 		default:
 			others = append(others, arg)
