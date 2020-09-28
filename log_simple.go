@@ -1,6 +1,8 @@
 package gerr
 
 import (
+	"net/http"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -48,7 +50,7 @@ func (l *logSimple) Error(vals ...interface{}) error {
 }
 
 func getLogLevel(code int) logrus.Level {
-	if code < 500 {
+	if code < http.StatusInternalServerError {
 		return logrus.InfoLevel
 	}
 
