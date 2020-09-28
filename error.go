@@ -30,14 +30,14 @@ func (e Error) Error() string {
 		b.WriteString(e.TraceID)
 	}
 
-	if e.Code > 0 {
-		pad(b, "code: ")
-		b.WriteString(strconv.Itoa(e.Code))
-	}
-
 	if e.Op != "" {
 		pad(b, "op: ")
 		b.WriteString(e.Op)
+	}
+
+	if e.Code > 0 {
+		pad(b, "code: ")
+		b.WriteString(strconv.Itoa(e.Code))
 	}
 
 	if e.Target != "" {
@@ -51,7 +51,7 @@ func (e Error) Error() string {
 	}
 
 	if e.trace != nil {
-		pad(b, "trace: ")
+		pad(b, "trace: \n")
 		b.WriteString(e.trace.file + ":" + strconv.Itoa(e.trace.line) + " (" + e.trace.function + ")")
 		if e.trace.fullTrace != "" {
 			b.WriteString("\n" + e.trace.fullTrace)
@@ -78,7 +78,7 @@ func (e Error) Error() string {
 //
 // http status code
 func (e Error) StatusCode() int {
-	return e.Code
+	return getStatusCode(e.Code)
 }
 
 // ToResponseError make response err
