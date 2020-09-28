@@ -82,6 +82,7 @@ func (e Error) StatusCode() int {
 }
 
 // ToResponseError make response err
-func (e Error) ToResponseError() ErrResponse {
+func (e Error) ToResponseError(traceID string) ErrResponse {
+	e.TraceID = traceID
 	return NewResponseError(e)
 }

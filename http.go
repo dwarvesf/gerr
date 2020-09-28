@@ -6,6 +6,8 @@ type ErrDetailResponse map[string]interface{}
 // ErrResponse error presentation
 type ErrResponse struct {
 	Message string            `json:"message,omitempty"`
+	TraceID string            `json:"trace_id,omitempty"`
+	Code    int               `json:"code,omitempty"`
 	Errors  ErrDetailResponse `json:"errors,omitempty"`
 }
 
@@ -17,6 +19,8 @@ func NewResponseError(err Error) ErrResponse {
 func doMakeErrResponse(err Error) ErrResponse {
 	return ErrResponse{
 		Message: err.Message,
+		TraceID: err.TraceID,
+		Code:    err.Code,
 		// Errors:    doMakeErrDetails(err.Errors),
 		Errors: normalizeResult(doMakeErrDetails(err.Errors)),
 	}
