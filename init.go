@@ -140,6 +140,8 @@ func getStackTrace(skip int) stacktrace {
 
 		longName := fn.Name()
 		stackStr = stackStr[strings.LastIndex(stackStr, longName):]
+		stackStrList := strings.Split(stackStr, "\n\n")
+		stackStr = stackStrList[0]
 		if fnTemp == "init" {
 			stackStr = ""
 			fnName = ""
