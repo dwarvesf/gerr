@@ -26,7 +26,9 @@ const (
 )
 
 const (
-	internalCodeMax = int(50000)
+	// InternalCodeCustomStart custom internal code index start
+	InternalCodeCustomStart = internalCodeLength
+	internalCodeMax         = int(10000)
 )
 
 var internalMsg = map[int]string{

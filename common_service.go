@@ -1,16 +1,20 @@
 package gerr
 
 const (
-	serviceCodeMin = iota + internalCodeMax
+	serviceCodeMin = iota + serviceCodeMax
 
 	// ErrSvcTimeout sevice Timeout
 	ErrSvcTimeout
+
 	// ErrSvcLostConnection sevice Lost Connection
 	ErrSvcLostConnection
+
 	// ErrSvcReconnectTimeOut sevice Reconnect TimeOut
 	ErrSvcReconnectTimeOut
+
 	// ErrSvcAuthRequired sevice Auth Required
 	ErrSvcAuthRequired
+
 	// ErrSvcPermissionRequired sevice Permission Required
 	ErrSvcPermissionRequired
 
@@ -19,7 +23,9 @@ const (
 )
 
 const (
-	serviceCodeMax = int(100000)
+	// ServiceCodeCustomStart custom Service code index start
+	ServiceCodeCustomStart = serviceCodeLength
+	serviceCodeMax         = int(20000)
 )
 
 var serviceMsg = map[int]string{
