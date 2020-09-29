@@ -11,20 +11,20 @@ type ErrorBuilder struct {
 	TraceID string
 	Code    int
 	Message string
-	Target  string
-	Op      string
 	Errors  []*Error
 }
 
 // Err make a error
-func (e ErrorBuilder) Err() Error {
-	return E(
+func (e ErrorBuilder) Err(args ...interface{}) Error {
+	args = append(
+		args,
 		e.Code,
 		e.Message,
-		Target(e.Target),
-		Op(e.Op),
 		e.Errors,
 		skipCaller(1),
+	)
+	return E(
+		args...,
 	)
 }
 
@@ -33,14 +33,9 @@ func New(args ...interface{}) ErrorBuilder {
 	e := ErrorBuilder{}
 	for _, arg := range args {
 		switch arg := arg.(type) {
-		case Target:
-			e.Target = string(arg)
 
 		case Message:
 			e.Message = string(arg)
-
-		case Op:
-			e.Op = string(arg)
 
 		case string:
 			e.Message = arg

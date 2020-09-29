@@ -5,7 +5,22 @@ import (
 	"log"
 	"runtime"
 	"strings"
+
+	"github.com/dwarvesf/gerr/cleanpath"
 )
+
+/*
+CleanPath function is applied to file paths before adding them to a stacktrace.
+By default, it makes the path relative to the $GOPATH environment variable.
+To remove some additional prefix like "github.com" from file paths in
+stacktraces, use something like:
+	stacktrace.CleanPath = func(path string) string {
+		path = cleanpath.RemoveGoPath(path)
+		path = strings.TrimPrefix(path, "github.com/")
+		return path
+	}
+*/
+var CleanPath = cleanpath.RemoveGoPath
 
 // Target target for an error
 //
@@ -127,6 +142,10 @@ func getStackTrace(skip int) stacktrace {
 	pc, file, line, ok := runtime.Caller(skip)
 	if !ok {
 		return newStackTrace("", 0, "?", stackStr)
+	}
+
+	if CleanPath != nil {
+		file = CleanPath(file)
 	}
 
 	fn := runtime.FuncForPC(pc)
