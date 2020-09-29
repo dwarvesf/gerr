@@ -47,6 +47,13 @@ type TraceID string
 // string
 type Op string
 
+// TraceError data for an error
+//
+// string
+type TraceError struct {
+	Error error
+}
+
 type skipCaller int
 
 // E builds an error value from its arguments.
@@ -95,18 +102,38 @@ func E(args ...interface{}) Error {
 			}
 			e.Errors = append(e.Errors, &copy)
 
-		case []Error:
+		case error:
 			// Make a copy
-			for idx := range arg {
-				currErr := arg[idx]
-
-				e.Errors = append(e.Errors, &currErr)
+			if itm := castError(arg); itm != nil {
+				e.Errors = append(e.Errors, itm)
+			} else {
+				e.Errors = append(e.Errors, arg)
 			}
 
-		case []*Error:
+		case []error:
 			// Make a copy
 			copy := arg
 			e.Errors = append(e.Errors, copy...)
+
+		case []Error:
+			// Make a copy
+			errs := []error{}
+			for idx := range arg {
+				errs = append(errs, &arg[idx])
+			}
+
+			e.Errors = append(e.Errors, errs...)
+
+		case []*Error:
+			errs := []error{}
+			for idx := range arg {
+				errs = append(errs, arg[idx])
+			}
+
+			e.Errors = append(e.Errors, errs...)
+
+		case TraceError:
+			e.Trace = arg.Error
 
 		case skipCaller:
 			skip = skip + int(arg)
@@ -195,4 +222,9 @@ func Et(target string, args ...interface{}) Error {
 	t := Target(target)
 	args = append(args, t, skipCaller(1))
 	return E(args...)
+}
+
+// Trace make trace error data for error
+func Trace(err error) TraceError {
+	return TraceError{err}
 }

@@ -61,7 +61,7 @@ func (st *Error) Format(f fmt.State, c rune) {
 }
 
 func formatFull(st *Error) string {
-	return st.formatFull()
+	return st.formatFull(0)
 }
 
 func formatBrief(st *Error) string {

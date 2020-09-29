@@ -88,17 +88,17 @@ func CombinedE(args ...interface{}) CombinedError {
 
 // makeErrorFromCombinedError make error form combined key error
 func makeErrorFromCombinedError(err CombinedError) *Error {
-	rs := &Error{
-		Code:    err.Code,
-		Message: err.Message,
-		Target:  err.Target,
-	}
+	rs := E(
+		err.Code,
+		err.Message,
+		err.Target,
+	)
 
 	for idx := range err.Items {
 		itm := err.Items[idx]
-		doMakeChildren(itm.Keys, itm.Message, rs)
+		doMakeChildren(itm.Keys, itm.Message, &rs)
 	}
-	return rs
+	return &rs
 }
 
 func doMakeChildren(keys []string, msg string, err *Error) {
@@ -107,7 +107,7 @@ func doMakeChildren(keys []string, msg string, err *Error) {
 		if len(err.Errors) > 0 {
 			err.Errors = append(err.Errors, newNode)
 		} else {
-			err.Errors = []*Error{newNode}
+			err.Errors = []error{newNode}
 		}
 		return
 	}
@@ -121,10 +121,14 @@ func doMakeChildren(keys []string, msg string, err *Error) {
 	found := false
 	for idx := range currNode.Errors {
 		childNode := currNode.Errors[idx]
-		childKey := childNode.Target
+		childErr := castError(childNode)
+		if childErr == nil {
+			continue
+		}
+		childKey := childErr.Target
 		if currKey == childKey {
 			found = true
-			currNode = childNode
+			currNode = childErr
 			break
 		}
 	}
@@ -134,7 +138,7 @@ func doMakeChildren(keys []string, msg string, err *Error) {
 		if len(currNode.Errors) > 0 {
 			currNode.Errors = append(currNode.Errors, newNode)
 		} else {
-			currNode.Errors = []*Error{newNode}
+			currNode.Errors = []error{newNode}
 		}
 		currNode = newNode
 	}

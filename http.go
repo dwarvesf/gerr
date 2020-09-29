@@ -17,12 +17,20 @@ func NewResponseError(err Error) ErrResponse {
 }
 
 func doMakeErrResponse(err Error) ErrResponse {
+	details := []*Error{}
+
+	for idx := range err.Errors {
+		itm := err.Errors[idx]
+		if dt := castError(itm); dt != nil {
+			details = append(details, dt)
+		}
+	}
 	return ErrResponse{
 		Message: err.Message,
 		TraceID: err.TraceID,
 		Code:    err.Code,
 		// Errors:    doMakeErrDetails(err.Errors),
-		Errors: normalizeResult(doMakeErrDetails(err.Errors)),
+		Errors: normalizeResult(doMakeErrDetails(details)),
 	}
 }
 
@@ -76,6 +84,18 @@ func doMakeErrDetails(errs []*Error) map[string]interface{} {
 	return rs
 }
 
+func castError(err error) *Error {
+	if dt, ok := err.(*Error); ok {
+		return dt
+	}
+
+	if dt, ok := err.(Error); ok {
+		return &dt
+	}
+
+	return nil
+}
+
 func doMakeErrDetail(err *Error) map[string]interface{} {
 	if !hasChildren(*err) {
 		rs := map[string]interface{}{}
@@ -89,7 +109,11 @@ func doMakeErrDetail(err *Error) map[string]interface{} {
 
 	for idx := range err.Errors {
 		itm := err.Errors[idx]
-		tmp := doMakeErrDetail(itm)
+		errItm := castError(itm)
+		if errItm == nil {
+			continue
+		}
+		tmp := doMakeErrDetail(errItm)
 		for key := range tmp {
 			tmpData, ok := rs[key]
 			if !ok {

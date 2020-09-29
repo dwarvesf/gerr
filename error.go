@@ -20,8 +20,9 @@ type Error struct {
 	Message string
 	Target  string
 	Op      string
-	Errors  []*Error
+	Errors  []error
 	trace   *stacktrace
+	Trace   error
 }
 
 func (e Error) doError() string {
@@ -55,8 +56,8 @@ func (e Error) doError() string {
 	if e.trace != nil {
 		pad(b, "trace: \n")
 		b.WriteString(e.trace.file + ":" + strconv.Itoa(e.trace.line) + " (" + e.trace.function + ")")
-		if e.trace.fullTrace != "" {
-			b.WriteString("\n" + e.trace.fullTrace)
+		if e.trace.stack != "" {
+			b.WriteString("\n" + e.trace.stack)
 		}
 	}
 
@@ -77,7 +78,7 @@ func (e Error) doError() string {
 }
 
 func (e Error) Error() string {
-	return e.formatFull()
+	return e.formatFull(0)
 }
 
 // StatusCode status code in Error
@@ -93,11 +94,14 @@ func (e Error) ToResponseError(traceID string) ErrResponse {
 	return NewResponseError(e)
 }
 
-func (e Error) formatFull() string {
+func (e Error) formatFull(level int) string {
 	var str string
 	newline := func() {
 		if str != "" && !strings.HasSuffix(str, "\n") {
 			str += "\n"
+		}
+		for i := 0; i < level; i++ {
+			str += "\t"
 		}
 	}
 
@@ -117,7 +121,25 @@ func (e Error) formatFull() string {
 	for idx := range curr.Errors {
 		newline()
 		itm := curr.Errors[idx]
-		str += itm.formatFull()
+		errItm := castError(itm)
+		str += "Caused by: "
+		if errItm != nil {
+			str += errItm.formatFull(level)
+		} else {
+			str += itm.Error()
+		}
+	}
+
+	if curr.Trace != nil {
+		newline()
+		itm := curr.Trace
+		errItm := castError(itm)
+		str += "Trace: "
+		if errItm != nil {
+			str += errItm.formatFull(level + 1)
+		} else {
+			str += itm.Error()
+		}
 	}
 	return str
 }
@@ -135,7 +157,12 @@ func (e Error) formatBrief() string {
 	concat(curr.Message)
 	for idx := range curr.Errors {
 		itm := curr.Errors[idx]
-		concat(itm.formatBrief())
+		errItm := castError(itm)
+		if errItm != nil {
+			str += errItm.formatBrief()
+		} else {
+			str += itm.Error()
+		}
 	}
 	return str
 }

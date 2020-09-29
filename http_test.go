@@ -19,12 +19,12 @@ func Test_doMakeErrResponse(t *testing.T) {
 			args: args{err: Error{
 				Message: "message error",
 				Target:  "",
-				Errors: []*Error{
-					{
+				Errors: []error{
+					&Error{
 						Target:  "field1",
 						Message: "error field1",
 					},
-					{
+					&Error{
 						Target:  "field2",
 						Message: "error field2",
 					},
@@ -44,31 +44,31 @@ func Test_doMakeErrResponse(t *testing.T) {
 				err: Error{
 					Message: "message error",
 					Target:  "",
-					Errors: []*Error{
-						{
+					Errors: []error{
+						&Error{
 							Target:  "items",
 							Message: "items got error",
-							Errors: []*Error{
-								{
+							Errors: []error{
+								&Error{
 									Target: "0",
-									Errors: []*Error{
-										{
+									Errors: []error{
+										&Error{
 											Target:  "amount",
 											Message: "out of stock",
 										},
 									},
 								},
-								{
+								&Error{
 									Target: "1",
-									Errors: []*Error{
-										{
+									Errors: []error{
+										&Error{
 											Target:  "id",
 											Message: "invalid",
-											Errors: []*Error{
-												{
+											Errors: []error{
+												&Error{
 													Message: "not found",
 												},
-												{
+												&Error{
 													Message: "invalid",
 												},
 											},

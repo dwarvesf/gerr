@@ -16,15 +16,18 @@ type ErrorBuilder struct {
 
 // Err make a error
 func (e ErrorBuilder) Err(args ...interface{}) Error {
-	args = append(
-		args,
+	newArg := []interface{}{
 		e.Code,
 		e.Message,
 		e.Errors,
 		skipCaller(1),
+	}
+
+	newArg = append(
+		newArg, args...,
 	)
 	return E(
-		args...,
+		newArg...,
 	)
 }
 

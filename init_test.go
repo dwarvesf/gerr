@@ -68,8 +68,8 @@ func TestE(t *testing.T) {
 				Message: "error",
 				Code:    400,
 				Op:      "TestE.func1",
-				Errors: []*Error{
-					{Message: "another error"},
+				Errors: []error{
+					&Error{Message: "another error"},
 				},
 			},
 		},
@@ -87,8 +87,8 @@ func TestE(t *testing.T) {
 				Message: "error",
 				Code:    400,
 				Op:      "TestE.func1",
-				Errors: []*Error{
-					{Message: "another error"},
+				Errors: []error{
+					&Error{Message: "another error"},
 				},
 			},
 		},
@@ -99,8 +99,8 @@ func TestE(t *testing.T) {
 			},
 			want: Error{
 				Op: "TestE.func1",
-				Errors: []*Error{
-					{Message: "another error"},
+				Errors: []error{
+					&Error{Message: "another error"},
 				},
 			},
 		},
@@ -111,8 +111,8 @@ func TestE(t *testing.T) {
 			},
 			want: Error{
 				Op: "TestE.func1",
-				Errors: []*Error{
-					{Message: "another error"},
+				Errors: []error{
+					&Error{Message: "another error"},
 				},
 			},
 		},
@@ -123,8 +123,8 @@ func TestE(t *testing.T) {
 			},
 			want: Error{
 				Op: "TestE.func1",
-				Errors: []*Error{
-					{Message: "unknown type float64, value 3 in error call"},
+				Errors: []error{
+					&Error{Message: "unknown type float64, value 3 in error call"},
 				},
 			},
 		},
