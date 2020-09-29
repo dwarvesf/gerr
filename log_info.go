@@ -73,6 +73,15 @@ func (l LogInfo) Update(args ...interface{}) {
 	}
 }
 
+// GetTraceID get trace ID
+func (l LogInfo) GetTraceID() string {
+	if val, ok := l[LogKeyTraceID]; ok {
+		return val
+	}
+
+	return ""
+}
+
 // NewLogInfo make base information for log
 func NewLogInfo(args ...interface{}) LogInfo {
 	rs := LogInfo{}
