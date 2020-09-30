@@ -22,6 +22,11 @@ stacktraces, use something like:
 */
 var CleanPath = cleanpath.RemoveGoPath
 
+// SetCleanPath set clean path func
+func SetCleanPath(path string) {
+	CleanPath = cleanpath.RemoveProjectPath(path)
+}
+
 // Target target for an error
 //
 // string

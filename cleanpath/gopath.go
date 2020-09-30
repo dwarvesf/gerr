@@ -29,6 +29,14 @@ func RemoveGoPath(path string) string {
 	return path
 }
 
+// RemoveProjectPath make a path relative to one of the project
+func RemoveProjectPath(projPath string) func(string) string {
+	return func(path string) string {
+		path = RemoveGoPath(path)
+		return path[strings.Index(path, projPath):]
+	}
+}
+
 type longestFirst []string
 
 func (strs longestFirst) Len() int           { return len(strs) }
