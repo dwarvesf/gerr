@@ -70,7 +70,7 @@ func getLogLevel(code int) logrus.Level {
 }
 
 func detachFields(vals ...interface{}) (logrus.Fields, logrus.Level, []interface{}) {
-	var fields logrus.Fields
+	fields := logrus.Fields{}
 	lvl := logrus.InfoLevel
 	others := []interface{}{}
 	for idx := range vals {
@@ -81,9 +81,10 @@ func detachFields(vals ...interface{}) (logrus.Fields, logrus.Level, []interface
 		case *logrus.Fields:
 			fields = *arg
 		case LogInfo:
-			fields = newFieldsWithLogInfo(arg)
+			fields = newFieldsWithLogInfo(fields, arg)
 		case Error:
 			lvl = getLogLevel(arg.Code)
+			fields[LogKeyStatusCode] = arg.StatusCode()
 			others = append(others, arg.Error())
 
 		case *Error:
@@ -97,8 +98,8 @@ func detachFields(vals ...interface{}) (logrus.Fields, logrus.Level, []interface
 	return fields, lvl, others
 }
 
-func newFieldsWithLogInfo(val LogInfo) logrus.Fields {
-	rs := logrus.Fields{}
+func newFieldsWithLogInfo(exist logrus.Fields, val LogInfo) logrus.Fields {
+	rs := exist
 	for k := range val {
 		rs[k] = val[k]
 	}

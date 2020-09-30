@@ -27,6 +27,17 @@ func SetCleanPath(path string) {
 	CleanPath = cleanpath.RemoveProjectPath(path)
 }
 
+// SetCleanPathFunc set clean path func
+func SetCleanPathFunc(fn ...func(string) string) {
+	chain := append(
+		[]func(string) string{
+			cleanpath.RemoveGoPath,
+		},
+		fn...,
+	)
+	CleanPath = cleanpath.PathHandleChain(chain...)
+}
+
 // Target target for an error
 //
 // string

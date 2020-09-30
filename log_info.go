@@ -24,8 +24,11 @@ const (
 	// LogKeyUserAgent log key user agent
 	LogKeyUserAgent = "userAgent"
 
-	// LogKeyUnknown log key Method
+	// LogKeyUnknown log key
 	LogKeyUnknown = "unknown"
+
+	// LogKeyStatusCode log key for status code
+	LogKeyStatusCode = "statusCode"
 )
 
 // Service service name for logger

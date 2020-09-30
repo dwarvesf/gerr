@@ -37,6 +37,16 @@ func RemoveProjectPath(projPath string) func(string) string {
 	}
 }
 
+// PathHandleChain make a chain handle func
+func PathHandleChain(chain ...func(string) string) func(string) string {
+	return func(path string) string {
+		for idx := range chain {
+			path = chain[idx](path)
+		}
+		return path
+	}
+}
+
 type longestFirst []string
 
 func (strs longestFirst) Len() int           { return len(strs) }
