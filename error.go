@@ -112,9 +112,9 @@ func (e Error) formatFull(level int) string {
 	if trace != nil {
 		newline()
 		if trace.function != "" {
-			str += fmt.Sprintf(" --- at %v:%v (%v) ---", trace.file, trace.line, trace.function)
+			str += fmt.Sprintf(" --- at %v:%v (%v)", trace.file, trace.line, trace.function)
 		} else {
-			str += fmt.Sprintf(" --- at %v:%v ---", trace.file, trace.line)
+			str += fmt.Sprintf(" --- at %v:%v", trace.file, trace.line)
 		}
 	}
 
